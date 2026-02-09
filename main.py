@@ -1,6 +1,5 @@
 import requests
 
-from CurrentSourceCode.main import article
 from send_email import send_email
 
 topic = "tesla"
