@@ -47,6 +47,7 @@ Bana bunların borsayı nasıl etkilediğini anlatan ikinci bir paragraf daha ek
 """
 response = model.invoke(prompt)
 response_str = response.content
+response_str = str(response_str)
 
 body = "Subject: News Summary\n\n" + response_str + "\n\n"
 
