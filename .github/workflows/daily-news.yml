@@ -1,0 +1,46 @@
+name: Daily News Email Bot
+
+on:
+  schedule:
+    - cron: "0 13 * * *"  # UTC 13 = Türkiye 16:00
+  workflow_dispatch:
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # 🔥 DEBUG STEP (password geliyor mu kontrol)
+      - name: Check secrets (debug)
+        run: |
+          echo "NEWS_API_KEY length: ${#NEWS_API_KEY}"
+          echo "GOOGLE_API_KEY length: ${#GOOGLE_API_KEY}"
+          echo "GMAIL_APP_PASSWORD length: ${#GMAIL_APP_PASSWORD}"
+          echo "SENDER_EMAIL: $SENDER_EMAIL"
+          echo "RECEIVER_EMAIL: $RECEIVER_EMAIL"
+        env:
+          NEWS_API_KEY: ${{ secrets.NEWS_API_KEY }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
+          RECEIVER_EMAIL: ${{ secrets.RECEIVER_EMAIL }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+
+      - name: Run script
+        env:
+          NEWS_API_KEY: ${{ secrets.NEWS_API_KEY }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
+          RECEIVER_EMAIL: ${{ secrets.RECEIVER_EMAIL }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        run: python main.py
