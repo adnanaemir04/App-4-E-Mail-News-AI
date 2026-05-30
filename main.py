@@ -1,5 +1,3 @@
-from sys import api_version
-
 import requests
 from send_email import send_email
 from langchain.chat_models import init_chat_model
@@ -8,48 +6,56 @@ import os
 
 load_dotenv()
 
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
-api_key = os.getenv("NEWS_API_KEY")
-
+google_api_key = os.getenv("GOOGLE_API_KEY")
+news_api_key = os.getenv("NEWS_API_KEY")
 
 url = (
     "https://newsapi.org/v2/top-headlines?"
     "category=business&"
     "language=en&"
     "pageSize=8&"
-    "sortBy=publishedAt&apiKey=" + api_key
+    "sortBy=publishedAt&"
+    "apiKey=" + news_api_key
 )
 
-# Make request
-request = requests.get(url)
+response = requests.get(url)
+content = response.json()
 
-# Get a dictionary with data
-content = request.json()
-articles = content['articles']
-print(articles)
+articles = content.get("articles", [])
 
-# AI summarizing the news
+news_text = "\n".join(
+    f"{a.get('title', '')} - {a.get('description', '')}"
+    for a in articles
+)
+
 model = init_chat_model(
     model="gemini-3-flash-preview",
     model_provider="google-genai",
-    api_key=GOOGLE_API_KEY
+    api_key=google_api_key
 )
 
 prompt = f"""
-Haber özetleyicisisiniz.
+Sen bir finans haber analistisin.
 
-Bu haberleri analiz eden kısa bir paragraf yazın.
+Aşağıdaki haberleri analiz et.
 
-Bana bunların borsayı nasıl etkilediğini anlatan ikinci bir paragraf daha ekleyin.
+SADECE şu formatta cevap ver:
+1. Kısa piyasa özeti (1 paragraf)
+2. Borsaya etkisi (1 paragraf)
 
-İşte haber makaleleri:
-{articles}
+Haberler:
+{news_text}
 """
-response = model.invoke(prompt)
-response_str = response.content
-response_str = str(response_str)
 
-body = "Subject: News Summary\n\n" + response_str + "\n\n"
+result = model.invoke(prompt)
 
-body = body.encode("utf-8")
-send_email(message=body)
+# 🔥 SADECE TEXT ÇIKAR (signature vs. yok)
+response_text = result.content
+
+# Eğer yine structured gelirse fallback:
+if isinstance(response_text, list):
+    response_text = response_text[0].get("text", "")
+
+body = "Subject: News Summary\n\n" + response_text
+
+send_email(body.encode("utf-8"))
