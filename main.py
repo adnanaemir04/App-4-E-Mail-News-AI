@@ -36,13 +36,13 @@ model = init_chat_model(
 
 prompt = f"""
 Sen bir finans haber analistisin.
-
 Aşağıdaki haberleri analiz et.
-
-SADECE şu formatta cevap ver:
-1. Kısa piyasa özeti (1 paragraf)
-2. Borsaya etkisi (1 paragraf)
-
+Eğer kısaltması "FCEL,SATL,IREN,HIMS" olan 4 şirketten,
+herhangi biriyle alakalı bir haber yayınlanırsa onu analiz et ve mutlaka haber ver.
+Analizini şu şekilde paylaş:
+1-Genel Borsa Analizi (1 paragraf)
+2-SIKI TAKİP ETTİĞİNİZ ŞİRKETLER HAKKINDA HABERLER(yukarda bahsedilen 4 şirket) (detaylı analiz):
+şeklinde benimle paylaş.Ve her şirketin haberinin yanına şirketin kısaltmasını ekle.
 Haberler:
 {news_text}
 """
