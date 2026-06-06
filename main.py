@@ -1,29 +1,64 @@
 import requests
-
 from send_email import send_email
+from langchain.chat_models import init_chat_model
+from dotenv import load_dotenv
+import os
 
-topic = "tesla"
-api_key = "6613926791cd4d57a94d7d99d0909e3b"
-url = "https://newsapi.org/v2/everything?" \
-       f"q={topic}&" \
-       "sortBy=publishedAt&" \
-        "apiKey=6613926791cd4d57a94d7d99d0909e3b&" \
-        "language=en"
+load_dotenv()
 
-#Make request
-request = requests.get(url)
+google_api_key = os.getenv("GOOGLE_API_KEY")
+news_api_key = os.getenv("NEWS_API_KEY")
 
-#Get dictionary with data
-content = request.json()
+url = (
+    "https://newsapi.org/v2/top-headlines?"
+    "category=business&"
+    "language=en&"
+    "pageSize=8&"
+    "sortBy=publishedAt&"
+    "apiKey=" + news_api_key
+)
 
-#access the article titles and description
-body = ""
-for article in content["articles"][:20]:
-    if article["title"] is not None and article["description"] is not None:
-        body = "Subject:Today's News" + "\n"  \
-                + body + article["title"] + "\n" \
-                + article["description"] + "\n" \
-                + article["url"] + 2*"\n"
+response = requests.get(url)
+content = response.json()
 
-body = body.encode("UTF-8")
-send_email(message=body)
+articles = content.get("articles", [])
+
+news_text = "\n".join(
+    f"{a.get('title', '')} - {a.get('description', '')}"
+    for a in articles
+)
+
+model = init_chat_model(
+    model="gemini-3-flash-preview",
+    model_provider="google-genai",
+    api_key=google_api_key
+)
+
+prompt = f"""
+Sen bir finans haber analistisin.
+
+Aşağıdaki haberleri analiz et.
+
+Eğer kısaltması "FCEL,SATL,IREN,HIMS" olan 4 şirketten,
+herhangi biriyle alakalı bir haber yayınlanırsa onu analiz et ve mutlaka haber ver.
+
+Analizini şu şekilde paylaş:
+1-Genel Borsa Analizi (1 paragraf)
+2-SIKI TAKİP ETTİĞİNİZ ŞİRKETLER HAKKINDA HABERLER(yukarda bahsedilen 4 şirket) (detaylı analiz):
+şeklinde benimle paylaş.Ve her şirketin haberinin yanına şirketin kısaltmasını ekle.
+Haberler:
+{news_text}
+"""
+
+result = model.invoke(prompt)
+
+# 🔥 SADECE TEXT ÇIKAR (signature vs. yok)
+response_text = result.content
+
+# Eğer yine structured gelirse fallback:
+if isinstance(response_text, list):
+    response_text = response_text[0].get("text", "")
+
+body = "Subject: News Summary\n\n" + response_text
+
+send_email(body.encode("utf-8"))
