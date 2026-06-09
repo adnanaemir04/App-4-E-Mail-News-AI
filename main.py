@@ -4,13 +4,6 @@ from langchain.chat_models import init_chat_model
 from dotenv import load_dotenv
 import os
 
-key = os.getenv("GOOGLE_API_KEY")
-
-print("API KEY VAR MI:", key is not None)
-
-if key:
-    print("İLK 10 KARAKTER:", key[:10])
-
 load_dotenv()
 
 google_api_key = os.getenv("GOOGLE_API_KEY")
