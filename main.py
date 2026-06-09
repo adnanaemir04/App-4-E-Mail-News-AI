@@ -39,7 +39,7 @@ Sen bir finans haber analistisin.
 
 Aşağıdaki haberleri analiz et.
 
-Eğer kısaltması "FCEL,SATL,IREN,HIMS" olan 4 şirketten,
+Eğer kısaltması "FCEL,SATL,IREN,NEXR" olan 4 şirketten,
 herhangi biriyle alakalı bir haber yayınlanırsa onu analiz et ve mutlaka haber ver.
 
 Analizini şu şekilde paylaş:
