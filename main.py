@@ -37,11 +37,13 @@ model = init_chat_model(
 prompt = f"""
 Sen bir finans haber analistisin.
 Aşağıdaki haberleri analiz et.
-Eğer kısaltması "FCEL,SATL,IREN,HIMS" olan 4 şirketten,
+Eğer kısaltması "FCEL,SATL,NEXR" olan 3 şirketten,
 herhangi biriyle alakalı bir haber yayınlanırsa onu analiz et ve mutlaka haber ver.
+ÖZELLİKLE SATL'a dikkat et.
 Analizini şu şekilde paylaş:
 1-Genel Borsa Analizi (1 paragraf)
-2-SIKI TAKİP ETTİĞİNİZ ŞİRKETLER HAKKINDA HABERLER(yukarda bahsedilen 4 şirket) (detaylı analiz):
+2-SIKI TAKİP ETTİĞİNİZ ŞİRKETLER HAKKINDA HABERLER(yukarda bahsedilen 3 şirket) (detaylı analiz):
+3-SATL teknik ve takip analizi.
 şeklinde benimle paylaş.Ve her şirketin haberinin yanına şirketin kısaltmasını ekle.
 Haberler:
 {news_text}
