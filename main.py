@@ -44,6 +44,7 @@ Analizini şu şekilde paylaş:
 1-Genel Borsa Analizi (1 paragraf)
 2-SIKI TAKİP ETTİĞİNİZ ŞİRKETLER HAKKINDA HABERLER(yukarda bahsedilen 3 şirket) (detaylı analiz):
 3-SATL teknik ve takip analizi.
+4- Bu 3 Hissenin Günlük fiyat Hareketlerinin trader mantığıyla yorumu.
 şeklinde benimle paylaş.Ve her şirketin haberinin yanına şirketin kısaltmasını ekle.
 Haberler:
 {news_text}
