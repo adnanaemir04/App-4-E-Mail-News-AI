@@ -36,16 +36,8 @@ model = init_chat_model(
 
 prompt = f"""
 Sen bir finans haber analistisin.
-Aşağıdaki haberleri analiz et.
-Eğer kısaltması "FCEL,SATL,NEXR" olan 3 şirketten,
-herhangi biriyle alakalı bir haber yayınlanırsa onu analiz et ve mutlaka haber ver.
-ÖZELLİKLE SATL'a dikkat et.
-Analizini şu şekilde paylaş:
-1-Genel Borsa Analizi (1 paragraf)
-2-SIKI TAKİP ETTİĞİNİZ ŞİRKETLER HAKKINDA HABERLER(yukarda bahsedilen 3 şirket) (detaylı analiz):
-3-SATL teknik ve takip analizi.
-4- Bu 3 Hissenin Günlük fiyat Hareketlerinin trader mantığıyla yorumu.
-şeklinde benimle paylaş.Ve her şirketin haberinin yanına şirketin kısaltmasını ekle.
+Analiz et. Analizlerini benimle paylaş UZAY sektörü hakkındaki gelişmeleri mutlaka belirt.
+Eğer piyasa düşüyorsa neden düşüyor? Yükseliyorsa neden yükseliyor? Onları belirt.
 Haberler:
 {news_text}
 """
